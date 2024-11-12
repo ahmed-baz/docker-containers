@@ -1,8 +1,8 @@
 scrape_configs:
-  - job_name: 'smeMetrics'
-    metrics_path: '/actuator/prometheus'
+  - job_name: 'learn-hub-metrics'
+    metrics_path: 'actuator/prometheus'
     scrape_interval: 3s
     static_configs:
-      - targets: ['host.docker.internal:9999']
+      - targets: ['192.168.0.101:9999']
         labels:
-          application: 'sme service'
+          application: 'learn-hub-service'
