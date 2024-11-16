@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  #eureka-server
+  eureka-server:
+    image: ahmedbaz/eureka-server:1.2.0
+    restart: always
+    ports:
+      - '8761:8761'
+    networks:
+      - new-market-network
+  
+networks:
+  new-market-network:
+
