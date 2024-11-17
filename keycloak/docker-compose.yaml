@@ -8,20 +8,42 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      DB_VENDOR: h2
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/myrealm.json
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak-db:5444
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
     command:
       - "start-dev"
     ports:
       - '9696:8080'
     volumes:
       - keycloak-data:/opt/keycloak/data
-      - ./config:/opt/keycloak/config
     networks:
       - demo-net
-      
+
+  keycloak-db:
+    image: postgres:alpine3.17
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+      PGDATA: /var/lib/postgresql/data
+      PGPORT: 5444
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5444:5444"
+    networks:
+      - demo-net
+    restart: always
+
 volumes:
   keycloak-data:
+    driver: local
+  postgres-data:
+    driver: local
 
 networks:
   demo-net:
