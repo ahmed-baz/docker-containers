@@ -5,46 +5,42 @@ services:
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:24.0.2
+    depends_on:
+       - keycloak-db
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      DB_VENDOR: postgres
-      DB_ADDR: keycloak-db:5444
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5333/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
     command:
       - "start-dev"
     ports:
       - '9696:8080'
-    volumes:
-      - keycloak-data:/opt/keycloak/data
     networks:
-      - demo-net
+      - demo_net
 
   keycloak-db:
     image: postgres:alpine3.17
     container_name: keycloak-db
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
-      PGDATA: /var/lib/postgresql/data
-      PGPORT: 5444
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPORT: 5333
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5444:5444"
+      - '5333:5333'
     networks:
-      - demo-net
+      - demo_net
     restart: always
 
 volumes:
-  keycloak-data:
-    driver: local
-  postgres-data:
+  postgres_data:
     driver: local
 
 networks:
-  demo-net:
+  demo_net:
     driver: bridge
