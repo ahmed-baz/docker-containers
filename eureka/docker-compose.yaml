@@ -5,11 +5,8 @@ services:
   eureka-server:
     image: ahmedbaz/eureka-server:1.2.0
     restart: always
+    environment:
+      EUREKA_CLIENT_FETCH-REGISTRY: "false"
+      EUREKA_CLIENT_REGISTER-WITH-EUREKA: "false"
     ports:
       - '8761:8761'
-    networks:
-      - new-market-network
-  
-networks:
-  new-market-network:
-
